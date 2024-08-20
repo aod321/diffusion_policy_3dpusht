@@ -1,5 +1,8 @@
-import gym
+# import gym
+import gym as gym
 from gym import spaces
+# gym.spaces.box.Box
+# from gym import spaces
 import numpy as np
 from collections import defaultdict, deque
 import dill
@@ -16,7 +19,7 @@ def repeated_box(box_space, n):
     )
 
 def repeated_space(space, n):
-    if isinstance(space, spaces.Box):
+    if isinstance(space, spaces.Box) or isinstance(space, spaces.box.Box):
         return repeated_box(space, n)
     elif isinstance(space, spaces.Dict):
         result_space = spaces.Dict()
