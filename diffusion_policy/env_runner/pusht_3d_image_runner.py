@@ -1,3 +1,4 @@
+import os
 import wandb
 import numpy as np
 import torch
@@ -46,22 +47,19 @@ class Pusht3DImageRunner(BaseImageRunner):
 
         steps_per_render = max(10 // fps, 1)
         obs_mode = "rgb"
-        render_mode = "human"
+        render_mode = "rgb_array"
         reward_mode = "dense"
         shader = "default"
         sim_backend = "auto"
-        record_dir = "demos"
-        traj_name = None
-        save_video = False
-        env_id = "PosPushT-v1"
-        ontrol_mode="pd_ee_delta_pose"
+        control_mode="pd_ee_delta_pose"
+        enable_render = True
 
         def env_fn():
             return MultiStepWrapper(
                 VideoRecordingWrapper(
                     PosPushTEnv(
                         obs_mode=obs_mode,
-                        control_mode=ontrol_mode,
+                        control_mode=control_mode,
                         render_mode=render_mode,
                         reward_mode=reward_mode,
                         shader_dir=shader,
@@ -84,9 +82,17 @@ class Pusht3DImageRunner(BaseImageRunner):
             )
         env = env_fn()
         # env_fns = [env_fn] * n_envs
-        env_seeds = list()
-        env_prefixs = list()
-      
+        # env_seeds = list()
+        # env_prefixs = list()
+
+        if enable_render:
+            filename = pathlib.Path(output_dir).joinpath(
+                'media', wv.util.generate_id() + ".mp4")
+            os.makedirs(filename.parent, exist_ok=True)
+            # filename.parent.mkdir(parents=False, exist_ok=True)
+            filename = str(filename)
+            env.env.file_path = filename
+
         # env = AsyncVectorEnv(env_fns)
 
         # test env
@@ -97,8 +103,8 @@ class Pusht3DImageRunner(BaseImageRunner):
 
         self.env = env
         # self.env_fns = env_fns
-        self.env_seeds = env_seeds
-        self.env_prefixs = env_prefixs
+        # self.env_seeds = env_seeds
+        # self.env_prefixs = env_prefixs
         # self.env_init_fn_dills = env_init_fn_dills
         self.fps = fps
         self.crf = crf

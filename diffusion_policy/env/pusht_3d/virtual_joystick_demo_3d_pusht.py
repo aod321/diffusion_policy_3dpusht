@@ -59,7 +59,7 @@ socket.connect(server_address)
 # Subscribe to all topics (empty string means subscribe to everything)
 socket.setsockopt_string(zmq.SUBSCRIBE, '')
 #%%
-frequency = 30  # Define the desired frequency in Hz
+frequency = 10  # Define the desired frequency in Hz
 time_step = 1.0 / frequency  # Calculate the time step duration in seconds
 while True:
 
@@ -113,23 +113,27 @@ while True:
         # if action_taken:
         print(f"Received message: {x}, {y}")
         dpos = np.array([y, x], dtype=np.float32) * (max_pos_speed / frequency)
-        target_tcp_pose[0][:2] -= dpos[:2]
-        action = target_tcp_pose[0][:2]
+        if not (x==0 and y==0):
+            action_taken=True
+            
+        if action_taken:
+            target_tcp_pose[0][:2] -= dpos[:2]
+            action = target_tcp_pose[0][:2]
 
-        data = {
-            'image1': obs['image1'],
-            'image2': obs['image2'],
-            'agent_pos': obs['agent_pos'],
-            'action': action.numpy()
-        }
-        episode.append(data)
-        obs, reward, done, info = env.step(action)
-        print(f"reward: {reward}")
+            data = {
+                'image1': obs['image1'],
+                'image2': obs['image2'],
+                'agent_pos': obs['agent_pos'],
+                'action': action.numpy()
+            }
+            episode.append(data)
+            obs, reward, done, info = env.step(action)
+            print(f"reward: {reward}")
 
-        # Control loop frequency
-        elapsed_time = time.time() - start_time
-        if elapsed_time < time_step:
-            time.sleep(time_step - elapsed_time)  # Sleep to maintain frequency
+            # Control loop frequency
+            elapsed_time = time.time() - start_time
+            if elapsed_time < time_step:
+                time.sleep(time_step - elapsed_time)  # Sleep to maintain frequency
 
 
 # %%

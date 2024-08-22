@@ -39,7 +39,7 @@ env_runner:
   n_envs: null
 
 dataset:
-  _target_: diffusion_policy.dataset.pusht_image_3dsim_replaybuffer_dataset.PushtImageDatasetReplayBuffer
+  _target_: diffusion_policy.dataset.pusht_image_3dsim_maniskill_dataset.PushtImageDatasetManiSkill
   zarr_path: data/pusht_3d/20240817_100620
   horizon: ${horizon}
   pad_before: ${eval:'${n_obs_steps}-1'}

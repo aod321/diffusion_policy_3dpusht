@@ -13,7 +13,7 @@ from diffusion_policy.env_runner.pusht_3d_image_runner import Pusht3DImageRunner
 def test():
     import os
     from omegaconf import OmegaConf
-    cfg_path = '/nvmessd/yinzi/pusht_3dsim/diffusion_policy_3dpusht/diffusion_policy/config/task/pusht_3d_image.yaml'
+    cfg_path = './diffusion_policy/config/task/pusht_3d_image.yaml'
     cfg = OmegaConf.load(cfg_path)
     cfg['n_obs_steps'] = 1
     cfg['n_action_steps'] = 1
@@ -24,7 +24,7 @@ def test():
     del runner_cfg['_target_']
     runner = Pusht3DImageRunner(
         **runner_cfg, 
-        output_dir='/tmp/test')
+        output_dir='/tmp/test_push_3d_image_runner')
 
     # import pdb; pdb.set_trace()
 
@@ -36,6 +36,9 @@ def test():
         _ = env.step(env.action_space.sample())
 
     imgs = env.render()
+    print(imgs)
+    import mediapy as wv
+    wv.show_video(wv.read_video(imgs))
 
 if __name__ == '__main__':
     test()

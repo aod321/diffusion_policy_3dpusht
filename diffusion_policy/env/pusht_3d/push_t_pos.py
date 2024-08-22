@@ -359,7 +359,13 @@ class PosPushTEnv(PushTEnv):
             'agent_pos': agent_pos,  # N, 7
         }
         return new_obs,reward,terminated,info
-
+    
+    def render(self, mode="rgb_array"):
+        if self.render_mode != mode:
+            self.render_mode = mode
+        img_tensor = super().render()
+        img = img_tensor[0].numpy()
+        return img
 
 if __name__ == "__main__":
     env = PosPushTEnv()

@@ -27,7 +27,7 @@ knob_position = joystick_center  # Initial position of the joystick knob
 dragging = False
 
 # Frequency control
-frequency = 30  # Hz
+frequency = 10  # Hz
 period = 1.0 / frequency  # Time period corresponding to the frequency
 last_sent_time = 0
 
