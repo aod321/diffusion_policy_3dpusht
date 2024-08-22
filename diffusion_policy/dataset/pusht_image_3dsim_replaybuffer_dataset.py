@@ -78,8 +78,8 @@ class PushtImageDatasetReplayBuffer(BaseImageDataset):
 
     def _sample_to_data(self, sample):
         agent_pose = sample['agent_pos'].astype(np.float32)  # (N, 7), (x, y, z, qw, qx, qy, qz)
-        image1 = np.moveaxis(sample['image1'], -1, 1) / 255  # (N, 128, 128, 3) -> (N, 3, 128, 128)
-        image2 = np.moveaxis(sample['image2'], -1, 1) / 255  # (N, 128, 128, 3) -> (N, 3, 128, 128)
+        image1 = sample['image1'][:,:,0]  # (N, 3, 128, 128)
+        image2 = sample['image2'][:,:,0]  # (N, 3, 128, 128)
 
         agent_pos = agent_pose[:,0, :2]  # N, 2
 
@@ -104,6 +104,6 @@ class PushtImageDatasetReplayBuffer(BaseImageDataset):
 # %%
 if __name__ == "__main__":
     import os
-    zarr_path = "/home/yinzi/diffusion_policy_3dpusht/diffusion_policy/env/pusht_3d/replay_buffer_spacemouse_0821"
+    zarr_path = "./replay_buffer_output/pusht_3d_yinzi_20240821.zarr.zip"
     dataset = PushtImageDatasetReplayBuffer(zarr_path, horizon=16)
     print(dataset[0])
